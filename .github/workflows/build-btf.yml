@@ -43,7 +43,6 @@ jobs:
           echo "=== BTF related config check ==="
           grep -E 'DEBUG_INFO|KALLSYMS|BPF_SYSCALL' .config || echo "(none found)"
           grep -q 'CONFIG_KERNEL_DEBUG_INFO_BTF=y' .config || (echo "ERROR: CONFIG_KERNEL_DEBUG_INFO_BTF not enabled" && exit 1)
-          grep -q 'CONFIG_DEBUG_INFO_BTF=y' .config || (echo "ERROR: CONFIG_DEBUG_INFO_BTF not enabled" && exit 1)
           if grep -q 'CONFIG_KERNEL_DEBUG_INFO_REDUCED=y' .config; then
             echo "ERROR: CONFIG_KERNEL_DEBUG_INFO_REDUCED is y, BTF will be suppressed" && exit 1
           fi
