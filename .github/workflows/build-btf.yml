@@ -41,8 +41,8 @@ jobs:
         run: |
           cd openwrt
           echo "=== BTF related config check ==="
-          grep -E 'CONFIG_DEBUG_INFO_BTF|CONFIG_DEBUG_INFO=|CONFIG_BPF_SYSCALL|CONFIG_KALLSYMS' .config || true
-          grep -q '^CONFIG_DEBUG_INFO_BTF=y' .config || (echo "ERROR: CONFIG_DEBUG_INFO_BTF not enabled" && exit 1)
+          grep -E 'CONFIG_KERNEL_DEBUG_INFO|CONFIG_KERNEL_DEBUG_INFO_BTF|CONFIG_DEBUG_INFO_BTF|CONFIG_BPF_SYSCALL|CONFIG_KALLSYMS' .config || echo "(none found)"
+          grep -q 'DEBUG_INFO_BTF=y' .config || (echo "ERROR: DEBUG_INFO_BTF not enabled" && exit 1)
 
       - name: Download source packages
         run: |
@@ -60,7 +60,6 @@ jobs:
           VMLINUX=$(find build_dir -name vmlinux | head -n 1)
           echo "vmlinux path: $VMLINUX"
           if [ -z "$VMLINUX" ]; then echo "ERROR: vmlinux not found"; exit 1; fi
-          # 用 host 端 bpftool 或内核自带 pahole 校验 BTF 段是否存在
           if strings "$VMLINUX" | grep -q '\.BTF'; then
             echo "OK: .BTF section found in vmlinux"
           else
