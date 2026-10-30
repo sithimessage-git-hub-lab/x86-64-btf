@@ -73,6 +73,7 @@ jobs:
         run: |
           cd openwrt
           ls -lh bin/targets/x86/64/
+          echo "=== packages ==="
           ls -lh bin/targets/x86/64/packages/ || true
 
       - name: Upload firmware artifacts
@@ -83,8 +84,18 @@ jobs:
             openwrt/bin/targets/x86/64/*.img.gz
             openwrt/bin/targets/x86/64/*.img
             openwrt/bin/targets/x86/64/*.manifest
-            openwrt/bin/targets/x86/64/*.sha256sums
+            openwrt/bin/targets/x86/64/*.buildinfo
+            openwrt/bin/targets/x86/64/profiles.json
+            openwrt/bin/targets/x86/64/sha256sums
+            openwrt/bin/targets/x86/64/packages/
           if-no-files-found: error
+
+      - name: Upload package repository
+        uses: actions/upload-artifact@v4
+        with:
+          name: openwrt-x86-64-btf-packages
+          path: openwrt/bin/targets/x86/64/packages/
+          if-no-files-found: warn
 
       - name: Upload config for reference
         uses: actions/upload-artifact@v4
